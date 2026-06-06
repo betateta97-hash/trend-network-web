@@ -324,7 +324,7 @@ export default function Hero({ onOpenModal }: HeroProps) {
         
         {/* Constrained Content Row */}
         <div className="w-full max-w-7xl mx-auto px-6">
-          <div className="max-w-2xl mx-auto md:mx-0 text-center md:text-start flex flex-col items-center md:items-start">
+          <div className="max-w-4xl mx-auto md:mx-0 text-center md:text-start flex flex-col items-center md:items-start">
 
             {/* Floating statistics capsules */}
             <motion.div
@@ -357,10 +357,9 @@ export default function Hero({ onOpenModal }: HeroProps) {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.9, delay: 0.5 }}
-              className="text-2xl sm:text-3xl md:text-5xl lg:text-5xl xl:text-6xl font-display font-black leading-[1.3] text-brand-navy dark:text-white mb-4 md:mb-6 tracking-tight animate-fade-in"
+              className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-[44px] font-display font-black leading-[1.2] text-brand-navy dark:text-white mb-4 md:mb-6 tracking-tight animate-fade-in"
             >
               {t.hero_title_1}{" "}
-              <br className="hidden md:block" />
               <span
                 className="text-transparent bg-clip-text"
                 style={{
@@ -417,21 +416,21 @@ export default function Hero({ onOpenModal }: HeroProps) {
             </motion.div>
           </div>
         </div>
+      </div>
 
-        {/* =========================================
-            LAYER 5: THE SCROLLING PILLS MARQUEE (FULL WIDTH)
-            ========================================= */}
-        <div className="w-full overflow-hidden border-y border-slate-100/40 dark:border-slate-800/40 bg-slate-50/10 dark:bg-slate-950/10 backdrop-blur-[2px] py-4 md:py-5 z-20 mt-8 md:mt-10" dir="ltr">
-          <div className="animate-marquee-infinite flex" dir="ltr">
-            {[...pills, ...pills, ...pills].map((pill, idx) => (
-              <div
-                key={idx}
-                className="px-6 py-2.5 md:px-7 md:py-3.5 rounded-2xl bg-white/50 dark:bg-slate-900/50 backdrop-blur-md border border-white/70 dark:border-slate-800/60 shadow-sm text-slate-800 dark:text-slate-200 whitespace-nowrap text-sm md:text-base font-bold font-sans tracking-wide hover:bg-white/80 dark:hover:bg-slate-900/80 transition-colors duration-300 mr-6"
-              >
-                {pill}
-              </div>
-            ))}
-          </div>
+      {/* =========================================
+          LAYER 5: THE SCROLLING PILLS MARQUEE (FULL WIDTH)
+          ========================================= */}
+      <div className="w-full overflow-hidden border-y border-slate-100/40 dark:border-slate-800/40 bg-slate-50/10 dark:bg-slate-950/10 backdrop-blur-[2px] py-4 md:py-5 z-20 mb-6 md:mb-12" dir="ltr">
+        <div className="animate-marquee-infinite flex" dir="ltr">
+          {[...pills, ...pills, ...pills].map((pill, idx) => (
+            <div
+              key={idx}
+              className="px-6 py-2.5 md:px-7 md:py-3.5 rounded-2xl bg-white/50 dark:bg-slate-900/50 backdrop-blur-md border border-white/70 dark:border-slate-800/60 shadow-sm text-slate-800 dark:text-slate-200 whitespace-nowrap text-sm md:text-base font-bold font-sans tracking-wide hover:bg-white/80 dark:hover:bg-slate-900/80 transition-colors duration-300 mr-6"
+            >
+              {pill}
+            </div>
+          ))}
         </div>
       </div>
 

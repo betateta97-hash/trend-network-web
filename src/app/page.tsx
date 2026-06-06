@@ -29,6 +29,7 @@ export default function Home() {
   const t = translations[language];
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
@@ -44,13 +45,13 @@ export default function Home() {
   return (
     <div className="w-full min-h-screen bg-white dark:bg-[#090d16] flex flex-col selection:bg-brand-blue selection:text-white transition-colors duration-300">
       {/* 1. Page Preloader */}
-      <Preloader />
+      <Preloader onComplete={() => setIsLoading(false)} />
 
       {/* 2. Lead Form Popup Modal */}
       <LeadModal isOpen={isModalOpen} onClose={closeModal} />
 
       {/* 3. Floating Pill Navbar */}
-      <Navbar onOpenModal={openModal} />
+      {!isLoading && <Navbar onOpenModal={openModal} />}
 
       {/* 4. Hero Section */}
       <Hero onOpenModal={openModal} />
