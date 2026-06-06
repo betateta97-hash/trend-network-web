@@ -7,7 +7,7 @@ import { Suspense } from "react";
 
 export default function HeroScene() {
   return (
-    <div className="absolute inset-0 w-full h-full -z-10 bg-gradient-to-b from-[#ffffff] via-[#f7fafc] to-[#ffffff]">
+    <div className="absolute inset-0 w-full h-full -z-10 bg-gradient-to-b from-[#ffffff] via-[#f7fafc] to-[#ffffff] dark:from-[#090d16] dark:via-[#0c101d] dark:to-[#090d16] transition-colors duration-300">
       <Canvas
         camera={{ position: [0, 0, 7.5], fov: 60 }}
         gl={{ antialias: true }}

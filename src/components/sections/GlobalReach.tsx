@@ -1,7 +1,7 @@
-"use client";
-
 import { motion } from "framer-motion";
-import { Globe, MapPin, Users, Wifi, ArrowUpRight } from "lucide-react";
+import { Globe as GlobeIcon, MapPin, Users, Wifi, ArrowUpRight } from "lucide-react";
+import { useApp } from "@/context/AppContext";
+import { translations } from "@/data/translations";
 
 interface Country {
   name: string;
@@ -18,7 +18,7 @@ const countries: Country[] = [
     enName: "Egypt",
     clients: "+250 كافيه",
     ping: "15ms",
-    description: "البنية التحتية الأساسية ومراكز التوزيع الرئيسية للهوتسبوت وتوفير ضمان التشغيل المستمر.",
+    description: "البنية التحتية الأساسية ومراكز توزيع كروت الإنترنت مع ضمان تشغيل الشبكة دون انقطاع.",
     color: "#4f46e5",
   },
   {
@@ -26,7 +26,7 @@ const countries: Country[] = [
     enName: "Sudan",
     clients: "+120 كافيه",
     ping: "28ms",
-    description: "تغطية واسعة للشبكات المحلية وحلول مايكروتيك مخصصة للبيئات ذات التحديات الخاصة.",
+    description: "تغطية واسعة للشبكات المحلية وحلول سيستم واي فاي مخصصة للمناطق ذات التحديات الخاصة.",
     color: "#3b82f6",
   },
   {
@@ -34,7 +34,7 @@ const countries: Country[] = [
     enName: "Iraq",
     clients: "+180 كافيه",
     ping: "22ms",
-    description: "إدارة متطورة لسيرفرات الألعاب وحلول هوتسبوت سحابية فائقة السرعة لمراكز الألعاب.",
+    description: "إدارة متطورة لسرعات الألعاب وحلول كروت إنترنت سحابية فائقة السرعة لمراكز الألعاب جيمينج.",
     color: "#10b981",
   },
   {
@@ -58,7 +58,7 @@ const countries: Country[] = [
     enName: "Syria",
     clients: "+85 كافيه",
     ping: "30ms",
-    description: "إعدادات مايكروتيك مخصصة لإدارة الأحمال وتوزيع السرعات الذكي عبر نقاط وصول متعددة.",
+    description: "إعدادات سيستم واي فاي مخصصة لإدارة أحمال وسرعات الإنترنت عبر نقاط بث متعددة.",
     color: "#7dd3fc",
   },
 ];
@@ -88,10 +88,23 @@ const cardVariants = {
 };
 
 export default function GlobalReach() {
+  const { language, theme } = useApp();
+  const t = translations[language];
+
+  const localizedCountries = countries.map((country, idx) => ({
+    ...country,
+    name: language === "ar" ? t.global_countries[idx]?.name : t.global_countries[idx]?.enName || country.name,
+    enName: t.global_countries[idx]?.enName || country.enName,
+    clients: t.global_countries[idx]?.clients || country.clients,
+    ping: t.global_countries[idx]?.ping || country.ping,
+    description: t.global_countries[idx]?.description || country.description,
+  }));
+
   return (
     <section
+      key={language}
       id="global-reach"
-      className="relative w-full py-32 md:py-44 overflow-hidden text-brand-navy bg-white"
+      className="relative w-full py-32 md:py-44 overflow-hidden text-brand-navy dark:text-slate-100 bg-white dark:bg-slate-900/40 transition-colors duration-300"
     >
       {/* Ambient glow orbs */}
       <div
@@ -103,8 +116,9 @@ export default function GlobalReach() {
           width: "700px",
           height: "700px",
           borderRadius: "50%",
-          background:
-            "radial-gradient(circle at center, rgba(125,211,252,0.38) 0%, rgba(56,189,248,0.16) 50%, transparent 75%)",
+          background: theme === 'dark'
+            ? "radial-gradient(circle at center, rgba(125,211,252,0.12) 0%, rgba(56,189,248,0.04) 50%, transparent 75%)"
+            : "radial-gradient(circle at center, rgba(125,211,252,0.38) 0%, rgba(56,189,248,0.16) 50%, transparent 75%)",
           filter: "blur(65px)",
           pointerEvents: "none",
           zIndex: 0,
@@ -118,8 +132,9 @@ export default function GlobalReach() {
           width: "500px",
           height: "500px",
           borderRadius: "50%",
-          background:
-            "radial-gradient(circle at center, rgba(186,230,253,0.42) 0%, transparent 70%)",
+          background: theme === 'dark'
+            ? "radial-gradient(circle at center, rgba(186,230,253,0.10) 0%, transparent 70%)"
+            : "radial-gradient(circle at center, rgba(186,230,253,0.42) 0%, transparent 70%)",
           filter: "blur(60px)",
           pointerEvents: "none",
           zIndex: 0,
@@ -134,11 +149,10 @@ export default function GlobalReach() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.6 }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold text-brand-blue mb-5"
-            style={{ background: "#e0f2fe" }}
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold text-brand-blue dark:text-sky-400 mb-5 bg-[#e0f2fe] dark:bg-slate-800 transition-colors duration-300"
           >
-            <Globe className="w-3.5 h-3.5" />
-            التواجد والانتشار الجغرافي
+            <GlobeIcon className="w-3.5 h-3.5" />
+            {t.global_badge}
           </motion.div>
 
           <motion.h2
@@ -146,16 +160,16 @@ export default function GlobalReach() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.75, delay: 0.1, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
-            className="text-3xl md:text-5xl font-display font-black mb-6 text-brand-navy leading-tight"
+            className="text-3xl md:text-5xl font-display font-black mb-6 text-brand-navy dark:text-white leading-tight"
           >
-            نعمل في مختلف أرجاء{" "}
+            {t.global_title_1}{" "}
             <span
               className="text-transparent bg-clip-text"
               style={{
                 backgroundImage: "linear-gradient(135deg, #4f46e5, #3b82f6)",
               }}
             >
-              الوطن العربي
+              {t.global_title_2}
             </span>
           </motion.h2>
 
@@ -164,33 +178,32 @@ export default function GlobalReach() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.65, delay: 0.2 }}
-            className="text-gray-400 font-sans text-lg leading-relaxed"
+            className="text-gray-400 dark:text-slate-400 font-sans text-lg leading-relaxed"
           >
-            ندير شبكات كبرى المقاهي ومراكز الألعاب بمستويات اتصال فائقة
-            الاستقرار وحماية شاملة من أي تهديدات.
+            {t.global_description}
           </motion.p>
         </div>
 
         {/* ── Country Cards — Spring Stagger ── */}
         <motion.div
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8"
           variants={containerVariants}
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, margin: "-100px" }}
         >
-          {countries.map((country) => (
+          {localizedCountries.map((country) => (
             <motion.div
               key={country.name}
               variants={cardVariants}
-              className="card-soft p-8 group cursor-default"
+              className="card-soft p-6 md:p-8 group cursor-default"
             >
               <div className="flex items-start justify-between mb-6">
-                <div>
-                  <h3 className="text-2xl font-display font-black text-brand-navy mb-1">
+                <div className="text-start">
+                  <h3 className="text-2xl font-display font-black text-brand-navy dark:text-white mb-1">
                     {country.name}
                   </h3>
-                  <span className="text-[11px] text-gray-400 font-sans tracking-[0.12em] uppercase">
+                  <span className="text-[11px] text-gray-400 dark:text-slate-500 font-sans tracking-[0.12em] uppercase">
                     {country.enName}
                   </span>
                 </div>
@@ -205,13 +218,12 @@ export default function GlobalReach() {
                 </div>
               </div>
 
-              <p className="text-gray-400 font-sans text-sm mb-8 leading-relaxed">
+              <p className="text-gray-400 dark:text-slate-400 font-sans text-sm mb-8 leading-relaxed text-start">
                 {country.description}
               </p>
 
               <div
-                className="flex items-center justify-between text-xs font-sans text-gray-500 pt-4"
-                style={{ borderTop: "1px solid #f1f5f9" }}
+                className="flex items-center justify-between text-xs font-sans text-gray-500 dark:text-slate-450 pt-4 border-t border-[#f1f5f9] dark:border-slate-800/85"
               >
                 <span className="flex items-center gap-1.5 font-semibold">
                   <Users className="w-3.5 h-3.5" style={{ color: country.color }} />
@@ -225,7 +237,7 @@ export default function GlobalReach() {
                   className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 font-bold text-[11px]"
                   style={{ color: country.color }}
                 >
-                  تفاصيل
+                  {t.global_details}
                   <ArrowUpRight className="w-3 h-3" />
                 </span>
               </div>
@@ -243,9 +255,9 @@ export default function GlobalReach() {
         >
           <defs>
             <linearGradient id="waveGradGR" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#f5f3ff" />
-              <stop offset="50%" stopColor="#eef2ff" />
-              <stop offset="100%" stopColor="#f5f3ff" />
+              <stop offset="0%" stopColor={theme === 'dark' ? '#070a13' : '#f5f3ff'} />
+              <stop offset="50%" stopColor={theme === 'dark' ? '#090d16' : '#eef2ff'} />
+              <stop offset="100%" stopColor={theme === 'dark' ? '#070a13' : '#f5f3ff'} />
             </linearGradient>
           </defs>
           <path

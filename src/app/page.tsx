@@ -21,8 +21,12 @@ import Services from "@/components/sections/Services";
 import Radius from "@/components/sections/Radius";
 import Portfolio from "@/components/sections/Portfolio";
 import { Server } from "lucide-react";
+import { useApp } from "@/context/AppContext";
+import { translations } from "@/data/translations";
 
 export default function Home() {
+  const { language, theme } = useApp();
+  const t = translations[language];
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
 
@@ -38,7 +42,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="w-full min-h-screen bg-white flex flex-col selection:bg-brand-blue selection:text-white">
+    <div className="w-full min-h-screen bg-white dark:bg-[#090d16] flex flex-col selection:bg-brand-blue selection:text-white transition-colors duration-300">
       {/* 1. Page Preloader */}
       <Preloader />
 
@@ -66,7 +70,7 @@ export default function Home() {
       {/* 8. Final CTA + Footer */}
       {/* 8. Final CTA */}
       <section className="relative w-full py-28 md:py-36 overflow-hidden text-white"
-        style={{ background: "linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%)" }}
+        style={{ background: theme === 'dark' ? "linear-gradient(135deg, #070a12 0%, #0c0a2b 50%, #070a12 100%)" : "linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%)" }}
       >
         {/* Subtle radial glow */}
         <div className="absolute inset-0 pointer-events-none"
@@ -81,16 +85,16 @@ export default function Home() {
           </div>
 
           <h2 className="text-3xl md:text-5xl font-display font-black mb-6 leading-tight">
-            جاهز لتطوير{" "}
+            {t.cta_title_1}{" "}
             <span className="text-transparent bg-clip-text"
               style={{ backgroundImage: "linear-gradient(135deg, #818cf8, #60a5fa)" }}
             >
-              شبكة كافيهك؟
+              {t.cta_title_2}
             </span>
           </h2>
 
           <p className="text-slate-400 font-sans text-lg mb-12 leading-relaxed max-w-xl mx-auto">
-            تحدث مع مهندس متخصص من TREND NETWORK واحصل على حل شبكي مخصص لكافيهك خلال 24 ساعة.
+            {t.cta_description}
           </p>
 
           <button
@@ -100,7 +104,7 @@ export default function Home() {
               boxShadow: "0 10px 40px rgba(79, 70, 229, 0.40)",
             }}
           >
-            ابدأ الآن — مجاناً
+            {t.cta_btn}
           </button>
         </div>
       </section>
@@ -110,28 +114,38 @@ export default function Home() {
         
         {/* Massive TREND NETWORK Letters with Hover-Stretch Effect */}
         <div className="w-full flex justify-center items-start py-10 md:py-16 px-4">
-          <div className="flex items-center justify-center flex-wrap leading-none select-none max-w-7xl" dir="ltr">
-            {"TREND NETWORK".split("").map((char, index) => {
-              if (char === " ") {
-                return <span key={index} className="inline-block w-[3.5vw] md:w-[5vw]" />;
-              }
-              return (
-                <div key={index} className="relative group/letter inline-block">
-                  {/* Floating Sky Blue Dot */}
+          <div className="flex items-center justify-center flex-wrap gap-y-4 gap-x-6 md:gap-x-12 leading-none select-none max-w-7xl" dir="ltr">
+            
+            {/* Word: TREND */}
+            <div className="flex items-center whitespace-nowrap">
+              {"TREND".split("").map((char, index) => (
+                <div key={`trend-${index}`} className="relative group/letter inline-block">
                   <span className="absolute -top-3 md:-top-5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-[#4f46e5] opacity-0 scale-0 group-hover/letter:opacity-100 group-hover/letter:scale-100 transition-all duration-500 ease-out pointer-events-none" />
-                  
-                  {/* Stretching Letter */}
                   <span 
-                    className="font-bebas text-[7.5vw] md:text-[9.5vw] lg:text-[10.5vw] font-black leading-none inline-block transition-transform duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] origin-top group-hover/letter:scale-y-[1.38] select-none text-white/90"
-                    style={{
-                      fontFamily: "'Bebas Neue', sans-serif",
-                    }}
+                    className="font-bebas text-[12vw] sm:text-[10.5vw] md:text-[9vw] lg:text-[8.5vw] xl:text-[8vw] font-black leading-none inline-block transition-transform duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] origin-top group-hover/letter:scale-y-[1.38] select-none text-white/90"
+                    style={{ fontFamily: "'Bebas Neue', sans-serif" }}
                   >
                     {char}
                   </span>
                 </div>
-              );
-            })}
+              ))}
+            </div>
+
+            {/* Word: NETWORK */}
+            <div className="flex items-center whitespace-nowrap">
+              {"NETWORK".split("").map((char, index) => (
+                <div key={`network-${index}`} className="relative group/letter inline-block">
+                  <span className="absolute -top-3 md:-top-5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-[#4f46e5] opacity-0 scale-0 group-hover/letter:opacity-100 group-hover/letter:scale-100 transition-all duration-500 ease-out pointer-events-none" />
+                  <span 
+                    className="font-bebas text-[12vw] sm:text-[10.5vw] md:text-[9vw] lg:text-[8.5vw] xl:text-[8vw] font-black leading-none inline-block transition-transform duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] origin-top group-hover/letter:scale-y-[1.38] select-none text-white/90"
+                    style={{ fontFamily: "'Bebas Neue', sans-serif" }}
+                  >
+                    {char}
+                  </span>
+                </div>
+              ))}
+            </div>
+
           </div>
         </div>
 
@@ -141,17 +155,17 @@ export default function Home() {
         {/* Footer Bottom Bar */}
         <div className="w-[90%] max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6 text-slate-500 font-sans text-xs md:text-sm">
           {/* Right: Copyright Text */}
-          <div className="text-right order-1 md:order-2">
-            <p>جميع الحقوق محفوظة لشركة تريند نيتورك. © {new Date().getFullYear()}</p>
+          <div className="text-center md:text-right order-1 md:order-2">
+            <p>{t.footer_copyright} {new Date().getFullYear()}</p>
           </div>
 
           {/* Left: Contact info */}
-          <div className="flex items-center gap-6 order-2 md:order-1 w-full md:w-auto justify-between md:justify-start">
+          <div className="flex items-center justify-center md:justify-start order-2 md:order-1 w-full md:w-auto">
             {/* Email and Phone */}
-            <div className="text-left font-mono tracking-wider flex flex-col sm:flex-row sm:gap-4 text-slate-400">
+            <div className="text-center md:text-left font-mono tracking-wider flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-slate-400">
               <span>sales@trendnetwork.com</span>
               <span className="hidden sm:inline text-slate-700">|</span>
-              <span>+20 100 000 0000</span>
+              <span dir="ltr">+20 100 000 0000</span>
             </div>
           </div>
         </div>
@@ -166,7 +180,7 @@ export default function Home() {
             ? 'opacity-100 translate-y-0 scale-100 pointer-events-auto' 
             : 'opacity-0 translate-y-8 scale-75 pointer-events-none'
         }`}
-        title="الرجوع للأعلى"
+        title={t.footer_back_to_top}
       >
         <div className="absolute inset-0 rounded-2xl bg-gradient-to-tr from-[#4f46e5]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
         <svg

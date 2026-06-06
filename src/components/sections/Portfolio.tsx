@@ -1,7 +1,7 @@
-"use client";
-
 import { motion } from "framer-motion";
 import { Coffee, Cpu, CheckCircle2, TrendingUp } from "lucide-react";
+import { useApp } from "@/context/AppContext";
+import { translations } from "@/data/translations";
 
 interface Project {
   title: string;
@@ -17,10 +17,10 @@ const projects: Project[] = [
     title: "أسترو كافيه",
     location: "القاهرة، مصر",
     usersCount: "+300 متصل متزامن",
-    hardware: "MikroTik CCR2004",
+    hardware: "سيستم إنترنت ذكي",
     features: [
       "توزيع سرعات ديناميكي وذكي",
-      "صفحة دخول مخصصة وهوتسبوت متطور",
+      "صفحة دخول مخصصة وسيستم واي فاي متطور",
       "ربط الفروع البعيدة ببعضها",
     ],
     accentColor: "#4f46e5",
@@ -29,7 +29,7 @@ const projects: Project[] = [
     title: "أوكسجين جيمينج لاونج",
     location: "الخرطوم، السودان",
     usersCount: "+150 متصل متزامن",
-    hardware: "MikroTik RB4011",
+    hardware: "سيستم واي فاي متطور",
     features: [
       "تحديد أولوية البنج للألعاب التنافسية",
       "عزل تام للأجهزة لضمان الحماية",
@@ -41,7 +41,7 @@ const projects: Project[] = [
     title: "نيكسس كافيه",
     location: "بغداد، العراق",
     usersCount: "+200 متصل متزامن",
-    hardware: "MikroTik Cloud Core",
+    hardware: "سيستم إدارة الشبكة",
     features: [
       "صفحة ترويجية لعرض خدمات الكافيه",
       "تقييد أحمال التحميل للمستخدم الفردي",
@@ -53,10 +53,10 @@ const projects: Project[] = [
     title: "كاسل لاونج",
     location: "طرابلس، ليبيا",
     usersCount: "+250 متصل متزامن",
-    hardware: "MikroTik CCR1009",
+    hardware: "سيستم توزيع سرعات",
     features: [
       "إدارة الجلسات ومراقبتها تلقائياً",
-      "نظام قسائم هوتسبوت مدمج متكامل",
+      "نظام كروت إنترنت مدمج متكامل",
       "تغطية كاملة بتقنية الـ Mesh Wi-Fi",
     ],
     accentColor: "#f59e0b",
@@ -88,12 +88,27 @@ const cardVariants = {
 };
 
 export default function Portfolio() {
+  const { language, theme } = useApp();
+  const t = translations[language];
+
+  const localizedProjects = projects.map((project, idx) => ({
+    ...project,
+    title: t.portfolio_projects[idx]?.title || project.title,
+    location: t.portfolio_projects[idx]?.location || project.location,
+    usersCount: t.portfolio_projects[idx]?.usersCount || project.usersCount,
+    hardware: t.portfolio_projects[idx]?.hardware || project.hardware,
+    features: t.portfolio_projects[idx]?.features || project.features,
+  }));
+
   return (
     <section
+      key={language}
       id="portfolio"
-      className="relative w-full py-32 md:py-44 overflow-hidden text-brand-navy"
+      className="relative w-full py-32 md:py-44 overflow-hidden text-brand-navy dark:text-slate-100 transition-colors duration-300"
       style={{
-        background: "linear-gradient(180deg, #e0f2fe 0%, #f0f9ff 40%, #ffffff 100%)",
+        background: theme === 'dark' 
+          ? "linear-gradient(180deg, #090d16 0%, #070a13 40%, #090d16 100%)" 
+          : "linear-gradient(180deg, #e0f2fe 0%, #f0f9ff 40%, #ffffff 100%)",
       }}
     >
       {/* Ambient glow orbs */}
@@ -105,8 +120,9 @@ export default function Portfolio() {
           width: "600px",
           height: "600px",
           borderRadius: "50%",
-          background:
-            "radial-gradient(circle at center, rgba(125,211,252,0.42) 0%, rgba(186,230,253,0.18) 55%, transparent 75%)",
+          background: theme === 'dark'
+            ? "radial-gradient(circle at center, rgba(125,211,252,0.12) 0%, rgba(186,230,253,0.04) 55%, transparent 75%)"
+            : "radial-gradient(circle at center, rgba(125,211,252,0.42) 0%, rgba(186,230,253,0.18) 55%, transparent 75%)",
           filter: "blur(65px)",
           pointerEvents: "none",
           zIndex: 0,
@@ -120,8 +136,9 @@ export default function Portfolio() {
           width: "450px",
           height: "450px",
           borderRadius: "50%",
-          background:
-            "radial-gradient(circle at center, rgba(186,230,253,0.38) 0%, transparent 70%)",
+          background: theme === 'dark'
+            ? "radial-gradient(circle at center, rgba(186,230,253,0.10) 0%, transparent 70%)"
+            : "radial-gradient(circle at center, rgba(186,230,253,0.38) 0%, transparent 70%)",
           filter: "blur(60px)",
           pointerEvents: "none",
           zIndex: 0,
@@ -136,11 +153,10 @@ export default function Portfolio() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.6 }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold text-brand-blue mb-5"
-            style={{ background: "#e0f2fe" }}
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold text-brand-blue dark:text-sky-400 mb-5 bg-[#e0f2fe] dark:bg-slate-800 transition-colors duration-300"
           >
             <Coffee className="w-3.5 h-3.5" />
-            قصص النجاح للشركاء
+            {t.portfolio_badge}
           </motion.div>
 
           <motion.h2
@@ -148,16 +164,16 @@ export default function Portfolio() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.75, delay: 0.1, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] }}
-            className="text-3xl md:text-5xl font-display font-black mb-6 text-brand-navy leading-tight"
+            className="text-3xl md:text-5xl font-display font-black mb-6 text-brand-navy dark:text-white leading-tight"
           >
-            كافيهات تعتمد على{" "}
+            {t.portfolio_title_1}{" "}
             <span
               className="text-transparent bg-clip-text"
               style={{
                 backgroundImage: "linear-gradient(135deg, #4f46e5, #3b82f6)",
               }}
             >
-              شبكاتنا
+              {t.portfolio_title_2}
             </span>
           </motion.h2>
 
@@ -166,26 +182,25 @@ export default function Portfolio() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.65, delay: 0.2 }}
-            className="text-gray-400 font-sans text-lg leading-relaxed"
+            className="text-gray-400 dark:text-slate-400 font-sans text-lg leading-relaxed"
           >
-            شاهد كيف ساعدنا كبرى المقاهي ومراكز الألعاب في تقديم تجربة واي
-            فاي احترافية وثابتة تبني ولاء الزبائن.
+            {t.portfolio_description}
           </motion.p>
         </div>
 
         {/* ── Portfolio Grid — Spring Stagger ── */}
         <motion.div
-          className="grid grid-cols-1 md:grid-cols-2 gap-8"
+          className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8"
           variants={containerVariants}
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, margin: "-100px" }}
         >
-          {projects.map((project) => (
+          {localizedProjects.map((project) => (
             <motion.div
               key={project.title}
               variants={cardVariants}
-              className="card-soft p-10 group"
+              className="card-soft p-6 md:p-10 group text-start"
             >
               {/* Header row */}
               <div className="flex items-center justify-between mb-8">
@@ -199,11 +214,11 @@ export default function Portfolio() {
                   >
                     <Coffee className="w-4 h-4" />
                   </div>
-                  <div>
-                    <h3 className="text-xl font-display font-black text-brand-navy">
+                  <div className="text-start">
+                    <h3 className="text-xl font-display font-black text-brand-navy dark:text-white">
                       {project.title}
                     </h3>
-                    <p className="text-xs text-gray-400 font-sans">
+                    <p className="text-xs text-gray-400 dark:text-slate-500 font-sans">
                       {project.location}
                     </p>
                   </div>
@@ -213,27 +228,22 @@ export default function Portfolio() {
                   whileInView={{ opacity: 1, scale: 1 }}
                   viewport={{ once: true }}
                   transition={{ delay: 0.4, duration: 0.4 }}
-                  className="text-[11px] font-bold px-3 py-1.5 rounded-full text-emerald-600 flex items-center gap-1.5"
-                  style={{ background: "#f0fdf4" }}
+                  className="text-[11px] font-bold px-3 py-1.5 rounded-full text-emerald-600 dark:text-emerald-450 flex items-center gap-1.5 bg-[#f0fdf4] dark:bg-emerald-950/30 transition-colors duration-300"
                 >
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block animate-pulse" />
-                  نشط ومستقر
+                  {t.portfolio_status}
                 </motion.span>
               </div>
 
               {/* Metrics row */}
               <div
-                className="grid grid-cols-2 gap-4 mb-8 py-5 font-sans"
-                style={{
-                  borderTop: "1px solid #f1f5f9",
-                  borderBottom: "1px solid #f1f5f9",
-                }}
+                className="grid grid-cols-2 gap-4 mb-8 py-5 font-sans border-y border-[#f1f5f9] dark:border-slate-800/80 transition-colors duration-300"
               >
-                <div>
-                  <span className="text-[11px] text-gray-400 block mb-1.5 uppercase tracking-wide">
-                    النشاط والاستهلاك
+                <div className="text-start">
+                  <span className="text-[11px] text-gray-400 dark:text-slate-500 block mb-1.5 uppercase tracking-wide">
+                    {t.portfolio_metric_users}
                   </span>
-                  <span className="text-sm font-black text-brand-navy flex items-center gap-1.5">
+                  <span className="text-sm font-black text-brand-navy dark:text-slate-200 flex items-center gap-1.5">
                     <TrendingUp
                       className="w-3.5 h-3.5"
                       style={{ color: project.accentColor }}
@@ -241,11 +251,11 @@ export default function Portfolio() {
                     {project.usersCount}
                   </span>
                 </div>
-                <div>
-                  <span className="text-[11px] text-gray-400 block mb-1.5 uppercase tracking-wide">
-                    السيرفر المستخدم
+                <div className="text-start">
+                  <span className="text-[11px] text-gray-400 dark:text-slate-500 block mb-1.5 uppercase tracking-wide">
+                    {t.portfolio_metric_hardware}
                   </span>
-                  <span className="text-sm font-black text-brand-navy flex items-center gap-1.5">
+                  <span className="text-sm font-black text-brand-navy dark:text-slate-200 flex items-center gap-1.5">
                     <Cpu
                       className="w-3.5 h-3.5"
                       style={{ color: project.accentColor }}
@@ -256,7 +266,7 @@ export default function Portfolio() {
               </div>
 
               {/* Feature list */}
-              <ul className="space-y-3">
+              <ul className="space-y-3 text-start">
                 {project.features.map((feature, fIdx) => (
                   <motion.li
                     key={fIdx}
@@ -268,7 +278,7 @@ export default function Portfolio() {
                       duration: 0.5,
                       ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
                     }}
-                    className="text-sm text-gray-500 flex items-center gap-3 font-sans"
+                    className="text-sm text-gray-500 dark:text-slate-400 flex items-center gap-3 font-sans justify-start"
                   >
                     <CheckCircle2
                       className="w-4 h-4 flex-shrink-0"

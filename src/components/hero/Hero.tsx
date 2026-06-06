@@ -4,6 +4,8 @@ import { useRef, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { ArrowLeft, Server, Activity, ServerCrash, Wifi } from "lucide-react";
+import { useApp } from "@/context/AppContext";
+import { translations } from "@/data/translations";
 
 const HeroScene = dynamic(() => import("./HeroScene"), {
   ssr: false,
@@ -16,7 +18,7 @@ interface HeroProps {
   onOpenModal: () => void;
 }
 
-const marqueePills = [
+const marqueePillsAr = [
   "توليد وطباعة البطاقات",
   "إدارة البطاقات",
   "إدارة الاشتراكات",
@@ -29,6 +31,18 @@ const marqueePills = [
   "نظام الاشعارات المباشر",
 ];
 
+const marqueePillsEn = [
+  "Card Generation & Printing",
+  "Card Management",
+  "Subscription Management",
+  "User Access Portal",
+  "Reseller & POS System",
+  "Admin & Sub-network Managers",
+  "Network Monitoring",
+  "Connection Monitoring",
+  "Maintenance Requests",
+  "Real-time Notification System",
+];
 
 interface MagneticLetterProps {
   char: string;
@@ -92,6 +106,10 @@ function MagneticLetter({ char, className, style, mouseRef }: MagneticLetterProp
 }
 
 export default function Hero({ onOpenModal }: HeroProps) {
+  const { language, theme } = useApp();
+  const t = translations[language];
+  const pills = language === "ar" ? marqueePillsAr : marqueePillsEn;
+
   // Create a mouseRef to track client coordinates for physics calculations
   const mouseRef = useRef({ x: -1000, y: -1000 });
 
@@ -117,7 +135,7 @@ export default function Hero({ onOpenModal }: HeroProps) {
 
   return (
     <section
-      className="relative w-full min-h-screen flex flex-col overflow-hidden text-brand-navy"
+      className="relative w-full min-h-screen flex flex-col overflow-hidden text-brand-navy dark:text-slate-100 transition-colors duration-300"
       onMouseMove={handleMouseMove}
       onMouseLeave={() => { mouseRef.current = { x: -1000, y: -1000 }; }}
     >
@@ -130,50 +148,58 @@ export default function Hero({ onOpenModal }: HeroProps) {
       {/* =========================================
           LAYER 1: PARALLAX BACKGROUND WATERMARK (MASSIVE LEFT TYPOGRAPHY)
           ========================================= */}
-      <div className="absolute top-[28%] left-[5%] md:left-[10%] flex flex-col items-start pointer-events-none z-[1] overflow-hidden select-none" dir="ltr">
+      <div className={`absolute top-[80px] md:top-[28%] w-full md:w-auto flex flex-col items-center pointer-events-none z-[1] overflow-visible md:overflow-hidden select-none opacity-15 md:opacity-100 ${
+        language === 'ar' 
+          ? 'left-0 md:left-[10%] md:items-start' 
+          : 'right-0 md:right-[10%] md:items-end'
+      }`} dir="ltr">
         <motion.h1
           style={{
             x: wmX,
             y: wmY,
           }}
-          className="font-black whitespace-nowrap select-none pointer-events-none font-display tracking-tighter flex items-baseline"
+          className={`font-black whitespace-nowrap select-none pointer-events-none font-display tracking-tighter flex items-center justify-center w-full ${
+            language === 'ar' ? 'md:justify-start' : 'md:justify-end'
+          }`}
         >
           {/* Outlined TR part of TREND with Magnetic/Repelling Letters Effect */}
-          <span className="text-[13vw] flex select-none pointer-events-none">
+          <span className="text-[26vw] md:text-[13vw] flex items-center select-none pointer-events-none">
             {"TR".split("").map((char, index) => (
               <MagneticLetter
                 key={`trend-outline-${index}`}
                 char={char}
                 className="text-transparent select-none pointer-events-none"
-                style={{ WebkitTextStroke: '2.5px rgba(95, 92, 229, 0.35)' }}
+                style={{ WebkitTextStroke: theme === 'dark' ? '2.5px rgba(255, 255, 255, 0.15)' : '2.5px rgba(95, 92, 229, 0.45)' }}
                 mouseRef={mouseRef}
               />
             ))}
           </span>
 
           {/* Solid END part of TREND with Magnetic/Repelling Letters Effect */}
-          <span className="text-[13vw] flex select-none pointer-events-none">
+          <span className="text-[26vw] md:text-[13vw] flex items-center select-none pointer-events-none">
             {"END".split("").map((char, index) => (
               <MagneticLetter
                 key={`trend-solid-${index}`}
                 char={char}
-                className="text-slate-900 mix-blend-overlay opacity-30 font-bold select-none pointer-events-none"
+                className="text-slate-900 dark:text-white mix-blend-overlay opacity-50 md:opacity-30 dark:md:opacity-10 font-bold select-none pointer-events-none"
                 mouseRef={mouseRef}
               />
             ))}
           </span>
         </motion.h1>
 
-        {/* Arabic Subtitle: تريند نيتورك */}
+        {/* Subtitle: تريند نيتورك / TREND NETWORK */}
         <motion.div
           style={{
             x: wmX,
             y: wmY,
           }}
-          dir="rtl"
-          className="text-[2.2vw] font-black text-[#5f5ce5]/25 tracking-[0.2em] select-none pointer-events-none font-display mt-[-1vw] ps-4"
+          dir={language === "ar" ? "rtl" : "ltr"}
+          className={`text-[4.5vw] md:text-[2.2vw] font-black text-[#5f5ce5]/40 dark:text-slate-500/30 tracking-[0.2em] select-none pointer-events-none font-display mt-[-1vw] text-center w-full ${
+            language === 'ar' ? 'md:text-start md:ps-4' : 'md:text-end md:pe-4'
+          }`}
         >
-          تريند نيتورك
+          {t.hero_watermark_sub}
         </motion.div>
       </div>
 
@@ -182,10 +208,10 @@ export default function Hero({ onOpenModal }: HeroProps) {
           ========================================= */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden z-[1]">
         {/* Sweeping, overlapping translucent ribbons crossing the screen */}
-        <div className="absolute top-[15%] left-[-10%] w-[120%] h-48 bg-gradient-to-r from-sky-100/50 to-white/0 blur-2xl -rotate-12 transform origin-top-left" />
-        <div className="absolute top-[40%] right-[-10%] w-[120%] h-56 bg-gradient-to-l from-sky-100/40 to-white/0 blur-3xl rotate-6 transform origin-bottom-right" />
+        <div className="absolute top-[15%] left-[-10%] w-[120%] h-48 bg-gradient-to-r from-sky-100/50 to-white/0 dark:from-sky-950/20 dark:to-transparent blur-2xl -rotate-12 transform origin-top-left" />
+        <div className="absolute top-[40%] right-[-10%] w-[120%] h-56 bg-gradient-to-l from-sky-100/40 to-white/0 dark:from-indigo-950/20 dark:to-transparent blur-3xl rotate-6 transform origin-bottom-right" />
         <div 
-          className="absolute top-[25%] left-0 w-full h-[350px] bg-gradient-to-r from-sky-100/40 via-indigo-50/20 to-white/0 blur-2xl opacity-60"
+          className="absolute top-[25%] left-0 w-full h-[350px] bg-gradient-to-r from-sky-100/40 via-indigo-50/20 to-white/0 dark:from-slate-950/40 dark:to-transparent blur-2xl opacity-60"
           style={{ clipPath: "polygon(0 15%, 100% 0, 90% 100%, 10% 85%)" }}
         />
 
@@ -217,8 +243,9 @@ export default function Hero({ onOpenModal }: HeroProps) {
             insetInlineStart: "-10%",
             width: "650px",
             height: "650px",
-            background:
-              "radial-gradient(circle at 40% 40%, rgba(125,161,255,0.52) 0%, rgba(99,102,241,0.24) 50%, transparent 75%)",
+            background: theme === 'dark' 
+              ? "radial-gradient(circle at 40% 40%, rgba(79,70,229,0.15) 0%, rgba(99,102,241,0.05) 50%, transparent 75%)"
+              : "radial-gradient(circle at 40% 40%, rgba(125,161,255,0.52) 0%, rgba(99,102,241,0.24) 50%, transparent 75%)",
             filter: "blur(55px)",
             willChange: "transform, border-radius",
           }}
@@ -249,8 +276,9 @@ export default function Hero({ onOpenModal }: HeroProps) {
             insetInlineEnd: "-12%",
             width: "600px",
             height: "600px",
-            background:
-              "radial-gradient(circle at 60% 40%, rgba(165,180,252,0.50) 0%, rgba(196,181,253,0.22) 50%, transparent 75%)",
+            background: theme === 'dark'
+              ? "radial-gradient(circle at 60% 40%, rgba(129,140,248,0.15) 0%, rgba(196,181,253,0.05) 50%, transparent 75%)"
+              : "radial-gradient(circle at 60% 40%, rgba(165,180,252,0.50) 0%, rgba(196,181,253,0.22) 50%, transparent 75%)",
             filter: "blur(60px)",
             willChange: "transform, border-radius",
           }}
@@ -280,8 +308,9 @@ export default function Hero({ onOpenModal }: HeroProps) {
             transform: "translateX(-50%)",
             width: "520px",
             height: "420px",
-            background:
-              "radial-gradient(circle at center, rgba(186,230,253,0.45) 0%, rgba(125,161,255,0.18) 55%, transparent 75%)",
+            background: theme === 'dark'
+              ? "radial-gradient(circle at center, rgba(56,189,248,0.12) 0%, rgba(79,70,229,0.04) 55%, transparent 75%)"
+              : "radial-gradient(circle at center, rgba(186,230,253,0.45) 0%, rgba(125,161,255,0.18) 55%, transparent 75%)",
             filter: "blur(55px)",
             willChange: "transform, border-radius",
           }}
@@ -291,36 +320,36 @@ export default function Hero({ onOpenModal }: HeroProps) {
       {/* =========================================
           LAYER 4: HERO CONTENT & MARQUEE WRAPPER (FOR VERTICAL CENTERING)
           ========================================= */}
-      <div className="relative w-full flex-1 flex flex-col justify-center z-10 pt-28 pb-16 md:pb-20">
+      <div className="relative w-full flex-1 flex flex-col justify-center z-10 pt-36 md:pt-28 pb-10 md:pb-20">
         
         {/* Constrained Content Row */}
         <div className="w-full max-w-7xl mx-auto px-6">
-          <div className="max-w-2xl text-start">
+          <div className="max-w-2xl mx-auto md:mx-0 text-center md:text-start flex flex-col items-center md:items-start">
 
             {/* Floating statistics capsules */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.3 }}
-              className="flex flex-wrap gap-2.5 mb-8"
+              className="flex flex-wrap gap-2 md:gap-2.5 mb-6 md:mb-8 justify-center md:justify-start"
             >
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white text-xs font-semibold text-brand-navy"
+              <div className="inline-flex items-center gap-1.5 md:gap-2 px-3 md:px-4 py-1.5 md:py-2 rounded-full bg-white dark:bg-slate-900 text-[10px] md:text-xs font-semibold text-brand-navy dark:text-slate-300 border border-slate-100/50 dark:border-slate-800 transition-colors duration-300"
                 style={{ boxShadow: "0 4px 20px rgba(0,0,0,0.06), 0 1px 4px rgba(79,70,229,0.04)" }}
               >
-                <Activity className="w-3.5 h-3.5 text-brand-blue animate-pulse" />
-                <span>+100,000 مستخدم نشط</span>
+                <Activity className="w-3.5 h-3.5 text-[#4f46e5] animate-pulse" />
+                <span>{t.hero_stat_users}</span>
               </div>
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white text-xs font-semibold text-brand-navy"
+              <div className="inline-flex items-center gap-1.5 md:gap-2 px-3 md:px-4 py-1.5 md:py-2 rounded-full bg-white dark:bg-slate-900 text-[10px] md:text-xs font-semibold text-brand-navy dark:text-slate-300 border border-slate-100/50 dark:border-slate-800 transition-colors duration-300"
                 style={{ boxShadow: "0 4px 20px rgba(0,0,0,0.06), 0 1px 4px rgba(79,70,229,0.04)" }}
               >
-                <ServerCrash className="w-3.5 h-3.5 text-brand-accent" />
-                <span>+400 شبكة مفعلة</span>
+                <Server className="w-3.5 h-3.5 text-[#3b82f6]" />
+                <span>{t.hero_stat_networks}</span>
               </div>
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white text-xs font-semibold text-brand-navy"
+              <div className="inline-flex items-center gap-1.5 md:gap-2 px-3 md:px-4 py-1.5 md:py-2 rounded-full bg-white dark:bg-slate-900 text-[10px] md:text-xs font-semibold text-brand-navy dark:text-slate-300 border border-slate-100/50 dark:border-slate-800 transition-colors duration-300"
                 style={{ boxShadow: "0 4px 20px rgba(0,0,0,0.06), 0 1px 4px rgba(79,70,229,0.04)" }}
               >
                 <Wifi className="w-3.5 h-3.5 text-emerald-500" />
-                <span>99.9% وقت تشغيل</span>
+                <span>{t.hero_stat_uptime}</span>
               </div>
             </motion.div>
 
@@ -328,9 +357,9 @@ export default function Hero({ onOpenModal }: HeroProps) {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.9, delay: 0.5 }}
-              className="text-4xl md:text-6xl xl:text-7xl font-display font-black leading-[1.1] text-brand-navy mb-6 tracking-tight"
+              className="text-2xl sm:text-3xl md:text-5xl lg:text-5xl xl:text-6xl font-display font-black leading-[1.3] text-brand-navy dark:text-white mb-4 md:mb-6 tracking-tight animate-fade-in"
             >
-              بنية تحتية متطورة{" "}
+              {t.hero_title_1}{" "}
               <br className="hidden md:block" />
               <span
                 className="text-transparent bg-clip-text"
@@ -338,7 +367,7 @@ export default function Hero({ onOpenModal }: HeroProps) {
                   backgroundImage: "linear-gradient(135deg, #4f46e5 0%, #3b82f6 50%, #6366f1 100%)",
                 }}
               >
-                لشبكات الكافيهات
+                {t.hero_title_2}
               </span>
             </motion.h1>
 
@@ -346,20 +375,20 @@ export default function Hero({ onOpenModal }: HeroProps) {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.7 }}
-              className="text-gray-500 text-lg md:text-xl mb-12 leading-relaxed font-sans max-w-lg"
+              className="text-gray-500 dark:text-slate-400 text-sm sm:text-base md:text-lg lg:text-xl mb-8 md:mb-12 leading-relaxed font-sans max-w-lg"
             >
-              برمجة سيرفرات مايكروتيك مخصصة وإصدار كروت هوتسبوت سحابية ذكية وحماية شبكة فورية — مصممة لتفوق مقهاك ومراكز الألعاب على المنافسين.
+              {t.hero_description}
             </motion.p>
 
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.9 }}
-              className="flex flex-wrap gap-4"
+              className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start items-stretch sm:items-center w-full sm:w-auto max-w-sm sm:max-w-none mx-auto md:mx-0"
             >
               <button
                 onClick={onOpenModal}
-                className="group flex items-center gap-2 px-8 py-4 rounded-2xl text-white font-bold tracking-wider transition-all duration-300 cursor-pointer"
+                className="group flex items-center justify-center gap-2 px-8 py-4 rounded-2xl text-white font-bold tracking-wider transition-all duration-300 cursor-pointer w-full sm:w-auto"
                 style={{
                   background: "linear-gradient(135deg, #4f46e5, #3b82f6)",
                   boxShadow: "0 8px 30px rgba(79, 70, 229, 0.30), 0 2px 8px rgba(79, 70, 229, 0.15)",
@@ -373,16 +402,17 @@ export default function Hero({ onOpenModal }: HeroProps) {
                   (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
                 }}
               >
-                اطلب النظام الآن
-                <ArrowLeft className="w-5 h-5 transition-transform duration-300 group-hover:-translate-x-1" />
+                <span>{t.hero_btn_cta}</span>
+                <svg className={`w-5 h-5 transition-transform duration-300 ${language === "ar" ? "group-hover:-translate-x-1" : "group-hover:translate-x-1 rotate-180"}`} fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+                </svg>
               </button>
 
               <a
                 href="#services"
-                className="flex items-center gap-2 px-8 py-4 rounded-2xl text-brand-navy font-bold tracking-wider transition-all duration-300"
-                style={{ boxShadow: "0 4px 20px rgba(0,0,0,0.05)", background: "rgba(255,255,255,0.9)" }}
+                className="flex items-center justify-center gap-2 px-8 py-4 rounded-2xl text-brand-navy dark:text-white font-bold tracking-wider transition-all duration-300 w-full sm:w-auto bg-white/90 dark:bg-slate-900/90 border border-slate-200/50 dark:border-slate-800/80 shadow-md hover:bg-white dark:hover:bg-slate-900"
               >
-                استكشف المميزات
+                {t.hero_btn_explore}
               </a>
             </motion.div>
           </div>
@@ -391,12 +421,12 @@ export default function Hero({ onOpenModal }: HeroProps) {
         {/* =========================================
             LAYER 5: THE SCROLLING PILLS MARQUEE (FULL WIDTH)
             ========================================= */}
-        <div className="w-full overflow-hidden border-y border-slate-100/40 bg-slate-50/10 backdrop-blur-[2px] py-4 md:py-5 z-20 mt-8 md:mt-10" dir="ltr">
+        <div className="w-full overflow-hidden border-y border-slate-100/40 dark:border-slate-800/40 bg-slate-50/10 dark:bg-slate-950/10 backdrop-blur-[2px] py-4 md:py-5 z-20 mt-8 md:mt-10" dir="ltr">
           <div className="animate-marquee-infinite flex" dir="ltr">
-            {[...marqueePills, ...marqueePills, ...marqueePills].map((pill, idx) => (
+            {[...pills, ...pills, ...pills].map((pill, idx) => (
               <div
                 key={idx}
-                className="px-6 py-2.5 md:px-7 md:py-3.5 rounded-2xl bg-white/50 backdrop-blur-md border border-white/70 shadow-sm text-slate-800 whitespace-nowrap text-sm md:text-base font-bold font-sans tracking-wide hover:bg-white/80 transition-colors duration-300 mr-6"
+                className="px-6 py-2.5 md:px-7 md:py-3.5 rounded-2xl bg-white/50 dark:bg-slate-900/50 backdrop-blur-md border border-white/70 dark:border-slate-800/60 shadow-sm text-slate-800 dark:text-slate-200 whitespace-nowrap text-sm md:text-base font-bold font-sans tracking-wide hover:bg-white/80 dark:hover:bg-slate-900/80 transition-colors duration-300 mr-6"
               >
                 {pill}
               </div>
@@ -405,14 +435,16 @@ export default function Hero({ onOpenModal }: HeroProps) {
         </div>
       </div>
 
-      <div className="fixed right-5 md:right-6 top-1/2 -translate-y-1/2 flex flex-col items-center gap-5 md:gap-6 z-50">
+      <div className={`hidden md:flex fixed top-1/2 -translate-y-1/2 flex-col items-center gap-5 md:gap-6 z-50 ${
+        language === 'ar' ? 'right-5 md:right-6' : 'left-5 md:left-6'
+      }`}>
         
-        {/* Cursively connected vertical text "تابعونا" (rotated for top-to-bottom RTL layout) */}
+        {/* Cursively connected vertical text "تابعونا" / "Follow Us" (rotated for top-to-bottom RTL layout) */}
         <span 
           className="text-xs md:text-sm font-black text-slate-500 select-none transition-colors duration-300 hover:text-[#4f46e5] rotate-180" 
           style={{ writingMode: "vertical-rl" }}
         >
-          تابعونا
+          {t.hero_follow}
         </span>
 
         {/* Downward pointing vertical arrow */}
@@ -442,15 +474,15 @@ export default function Hero({ onOpenModal }: HeroProps) {
         <svg viewBox="0 0 1440 120" className="w-full block" preserveAspectRatio="none">
           <defs>
             <linearGradient id="waveGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#eef2ff" />
-              <stop offset="50%" stopColor="#e0e7ff" />
-              <stop offset="100%" stopColor="#eef2ff" />
+              <stop offset="0%" stopColor={theme === 'dark' ? '#090d16' : '#eef2ff'} />
+              <stop offset="50%" stopColor={theme === 'dark' ? '#0b1120' : '#e0e7ff'} />
+              <stop offset="100%" stopColor={theme === 'dark' ? '#090d16' : '#eef2ff'} />
             </linearGradient>
           </defs>
           {/* Second wave - slightly offset */}
           <path
             d="M0,60 C180,120 360,0 540,60 C720,120 900,20 1080,70 C1260,120 1380,50 1440,80 L1440,120 L0,120 Z"
-            fill="#eef2ff"
+            fill={theme === 'dark' ? '#090d16' : '#eef2ff'}
             fillOpacity="0.5"
           />
           {/* Primary wave */}

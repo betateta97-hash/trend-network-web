@@ -1,14 +1,17 @@
-"use client";
-
 import { motion } from "framer-motion";
+import { useApp } from "@/context/AppContext";
+import { translations } from "@/data/translations";
 
 export default function Radius() {
+  const { language, theme } = useApp();
+  const t = translations[language];
+
   return (
-    <section id="radius" className="w-full relative overflow-hidden bg-white">
+    <section id="radius" key={language} className="w-full relative overflow-hidden bg-white dark:bg-slate-900/20 transition-colors duration-300">
       <div className="w-full grid grid-cols-1 lg:grid-cols-12 min-h-[650px] lg:min-h-[750px]">
         
-        {/* Left/Right Split Column: Dark Navy Text Panel (RTL reading) */}
-        <div className="lg:col-span-6 bg-[#0b0f19] flex flex-col justify-center px-6 py-16 sm:px-12 md:px-20 lg:px-24 text-right relative z-10">
+        {/* Left/Right Split Column: Dark Navy Text Panel */}
+        <div className="lg:col-span-6 bg-[#0b0f19] flex flex-col justify-center px-6 py-16 sm:px-12 md:px-20 lg:px-24 text-start relative z-10">
           
           {/* Subtle Ambient Radial Glow */}
           <div className="absolute inset-0 pointer-events-none opacity-20"
@@ -36,7 +39,7 @@ export default function Radius() {
               transition={{ duration: 0.6 }}
               className="text-3xl md:text-5xl font-display font-black mb-8 text-white leading-tight"
             >
-              نظام TREND NETWORK لإدارة الشبكات
+              {t.radius_title}
             </motion.h2>
 
             {/* Paragraph 1: Highlights */}
@@ -47,7 +50,7 @@ export default function Radius() {
               transition={{ duration: 0.6, delay: 0.1 }}
               className="text-slate-300 font-sans text-base md:text-lg leading-relaxed mb-6 font-medium"
             >
-              نظام متكامل لإدارة شبكات الكافيهات وتوزيع كروت الهوتسبوت، صُمِّم خصيصًا لتبسيط برمجة سيرفرات مايكروتيك وتحسين الأداء. يُوفِّر تجربة إدارة ذكية تجمع بين المرونة، الأمان، وسهولة الاستخدام، مع واجهة عصرية وهيكل إداري متكامل لمراقبة كافيهك أو شبكتك من أي مكان.
+              {t.radius_desc_1}
             </motion.p>
 
             {/* Paragraph 2: Core features */}
@@ -58,7 +61,7 @@ export default function Radius() {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="text-slate-400 font-sans text-sm md:text-base leading-relaxed mb-8"
             >
-              يدعم النظام المحاسبة التلقائية لكروت الهوتسبوت، وتوليد بطاقات شحن الواي فاي القابلة للتصميم والطباعة، مع إشعارات المبيعات والمشتركين الفورية. كما يتيح تكامل البرمجة لتوزيع النطاق الترددي ديناميكياً وضمان جودة الخدمة لجميع زوار كافيهك، مع نسخ احتياطي فوري لإعدادات السيرفر يضمن استمرارية العمل دون انقطاع.
+              {t.radius_desc_2}
             </motion.p>
 
             {/* Paragraph 3: Closing Slogan with violet border decoration */}
@@ -67,23 +70,25 @@ export default function Radius() {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.3 }}
-              className="border-r-3 border-[#4f46e5] pr-4"
+              className="border-e-3 border-[#4f46e5] pe-4"
             >
               <p className="text-transparent bg-clip-text font-display font-bold text-base md:text-lg leading-relaxed inline-block"
                 style={{ backgroundImage: "linear-gradient(135deg, #a5b4fc, #818cf8)" }}
               >
-                نظام تريند نيتورك هو الحل الذكي الذي يجمع التقنية المتطورة بالإدارة السلسة — ليمنح شبكة كافيهك الاستقرار الكامل والتحكم المطلق بثقة واحترافية.
+                {t.radius_slogan}
               </p>
             </motion.div>
           </div>
         </div>
 
         {/* Left/Right Split Column: Light Mockups Panel */}
-        <div className="lg:col-span-6 bg-[#f8fafc] relative min-h-[400px] lg:min-h-0 flex items-center justify-center overflow-hidden">
+        <div className="lg:col-span-6 bg-[#f8fafc] dark:bg-[#0a0d16] relative min-h-[300px] sm:min-h-[400px] lg:min-h-0 aspect-[4/3] sm:aspect-video lg:aspect-auto flex items-center justify-center overflow-hidden transition-colors duration-300">
           {/* Subtle grid pattern background */}
-          <div className="absolute inset-0 opacity-[0.03] pointer-events-none"
+          <div className="absolute inset-0 opacity-[0.03] dark:opacity-[0.05] pointer-events-none"
             style={{
-              backgroundImage: `radial-gradient(#0f172a 1.5px, transparent 1.5px)`,
+              backgroundImage: theme === 'dark' 
+                ? 'radial-gradient(rgba(255, 255, 255, 0.15) 1.5px, transparent 1.5px)' 
+                : 'radial-gradient(#0f172a 1.5px, transparent 1.5px)',
               backgroundSize: "24px 24px",
             }}
           />
@@ -93,12 +98,12 @@ export default function Radius() {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, ease: "easeOut" }}
-            className="w-full h-full absolute inset-0"
+            className="w-full h-full absolute inset-0 animate-fade-in"
           >
             <img
               src="/radius_mockup.png"
-              alt="Super Speed Radius Mobile Dashboard App Mockups"
-              className="w-full h-full object-cover object-center select-none pointer-events-none"
+              alt="Radius Mobile Dashboard App Mockups"
+              className="w-full h-full object-contain md:object-cover object-center select-none pointer-events-none"
             />
           </motion.div>
         </div>
