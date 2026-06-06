@@ -15,7 +15,7 @@ export const viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://trend-network.net"),
+  metadataBase: new URL("https://trend-network-web.vercel.app"),
   title: "TREND NETWORK | سيستم واي فاي ذكي وإدارة شبكات الكافيهات",
   description: "أنظمة واي فاي ذكية لإدارة وتوزيع سرعات الإنترنت، طباعة كروت شحن الواي فاي السحابية، وحماية الشبكات في مصر والوطن العربي.",
   keywords: [
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "TREND NETWORK | سيستم واي فاي ذكي وإدارة شبكات الكافيهات",
     description: "الحل السحابي المتكامل لإدارة شبكة الواي فاي وتوليد كروت الإنترنت لكافيهك بذكاء وسرعة.",
-    url: "https://trend-network.net",
+    url: "https://trend-network-web.vercel.app",
     siteName: "TREND NETWORK",
     images: [
       {
